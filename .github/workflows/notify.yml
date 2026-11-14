@@ -1,0 +1,21 @@
+name: notify
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # 10분마다
+  workflow_dispatch:          # 수동 실행 버튼
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --omit=dev
+      - run: node notify.js
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          APP_URL: ${{ vars.APP_URL }}
